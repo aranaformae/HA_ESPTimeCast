@@ -157,3 +157,25 @@ async def test_service_descriptions(hass, device):
         descriptions["start_timer"]["fields"]["device_id"]["selector"]["device"]["integration"]
         == "esptimecast"
     )
+
+
+async def test_brightness_changes_report_latest_device_value_immediately(hass, device):
+    """Rapid consecutive writes must not leave the UI showing an older level."""
+    entry = await add_entry(hass, device)
+    entities = er.async_entries_for_config_entry(er.async_get(hass), entry.entry_id)
+    number = next(e.entity_id for e in entities if e.unique_id == f"{entry.entry_id}_brightness")
+    light = next(e.entity_id for e in entities if e.unique_id == f"{entry.entry_id}_display")
+    for level in (3, 12, 0, 15, 7):
+        await hass.services.async_call(
+            "number", "set_value", {"entity_id": number, "value": level}, blocking=True
+        )
+        assert device.state["display"]["brightness"] == level
+        assert hass.states.get(number).state == str(level)
+        assert hass.states.get(light).attributes["brightness"] == round((level + 1) * 255 / 16)
+    for requested in (32, 240, 128):
+        await hass.services.async_call(
+            "light", "turn_on", {"entity_id": light, "brightness": requested}, blocking=True
+        )
+        actual = device.state["display"]["brightness"]
+        assert hass.states.get(number).state == str(actual)
+        assert hass.states.get(light).attributes["brightness"] == round((actual + 1) * 255 / 16)

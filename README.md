@@ -8,7 +8,7 @@ Ontwikkeld op basis van firmware **2.1.14**, met de echte status van een **ESP32
 
 ### Handmatig — direct mogelijk
 
-1. Pak `esptimecast-1.0.0.zip` uit in de Home Assistant-configuratiemap. Het resultaat moet `/config/custom_components/esptimecast/manifest.json` zijn.
+1. Pak `esptimecast-1.0.1.zip` uit in de Home Assistant-configuratiemap. Het resultaat moet `/config/custom_components/esptimecast/manifest.json` zijn.
 2. Herstart Home Assistant.
 3. Ga naar **Instellingen → Apparaten & diensten → Integratie toevoegen → ESPTimeCast**.
 4. Vul `esptimecast.local` in, of het IP-adres. Home Assistant moet het apparaat kunnen bereiken. Een optionele HTTP-poort wordt ondersteund.
@@ -49,7 +49,7 @@ Deze integratie gebruikt eveneens het domein `esptimecast`. Installeer beide imp
 
 Wi-Fi-provisioning, firmware flashen/OTA, fabrieksreset en volledige configuratie-import/export blijven in de apparaatwebinterface. De apparaatpagina bevat daarvoor een link. Deze integratie kopieert geen firmwarecode.
 
-Status wordt standaard elke **15 seconden** ververst; instelbaar van 5–300 seconden. Na een opdracht volgt een statuscontrole. Aanvullende opgeslagen instellingen worden iedere 60 seconden en na wijzigingen opgehaald. Verbindingsverlies maakt entiteiten niet beschikbaar; herstel gaat automatisch.
+Status wordt standaard elke **15 seconden** ververst; instelbaar van 5–300 seconden. Na iedere opdracht wordt de apparaatstatus direct opnieuw uitgelezen, ook bij snel opeenvolgende wijzigingen. De helderheidsschuif rondt af naar de 16 hardwarestanden; de weergegeven procentwaarde kan daardoor iets verschillen van de gekozen waarde. Aanvullende opgeslagen instellingen worden iedere 60 seconden en na wijzigingen opgehaald. Verbindingsverlies maakt entiteiten niet beschikbaar; herstel gaat automatisch.
 
 De status omvat modus, huidige tekst, firmware, uptime, Wi-Fi-signaal, geheugengebruik, tijdsynchronisatie, weer, countdown, alarmen en buzzer. Optionele bron-sensoren staan standaard uit en kunnen via de entiteitsinstellingen worden ingeschakeld. De glucosewaarde gebruikt de eenheid van de apparaatconfiguratie; de firmware meldt die eenheid niet terug.
 

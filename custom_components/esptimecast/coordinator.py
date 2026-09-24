@@ -64,7 +64,8 @@ class Coordinator(DataUpdateCoordinator):
         except ESPTimeCastError as err:
             raise HomeAssistantError(str(err)) from err
         if refresh:
-            await self.async_request_refresh()
+            # User commands need confirmed state now, not after the refresh debounce.
+            await self.async_refresh()
 
     async def action(self, name, value=""):
         async def send(client):
