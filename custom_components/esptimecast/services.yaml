@@ -1,0 +1,666 @@
+send_message:
+  name: Send message
+  description: Show a temporary message. Interrupt=false protects it; the device may
+    reject messages with HTTP 409.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    message:
+      name: Message
+      required: true
+      selector:
+        text: {}
+    speed:
+      name: Speed
+      required: false
+      default: 80
+      selector:
+        number:
+          min: 10
+          max: 200
+          step: 1
+          mode: box
+    scrolls:
+      name: Scrolls
+      required: false
+      default: 1
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          mode: box
+    seconds:
+      name: Seconds
+      required: false
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 3600
+          step: 1
+          mode: box
+    bignumbers:
+      name: Bignumbers
+      required: false
+      default: false
+      selector:
+        boolean: {}
+    interrupt:
+      name: Interrupt
+      required: false
+      default: true
+      selector:
+        boolean: {}
+start_timer:
+  name: Start timer
+  description: Start a timer from 1 second to 24 hours (5M, 1H30M, 90S).
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    duration:
+      name: Duration
+      required: true
+      selector:
+        text: {}
+      example: 5M
+start_pomodoro:
+  name: Start Pomodoro
+  description: Start work, short break and long break durations in minutes.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    work:
+      name: Work
+      required: false
+      default: 25
+      selector:
+        number:
+          min: 1
+          max: 60
+          step: 1
+          mode: box
+    short_break:
+      name: Short break
+      required: false
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 60
+          step: 1
+          mode: box
+    long_break:
+      name: Long break
+      required: false
+      default: 15
+      selector:
+        number:
+          min: 1
+          max: 60
+          step: 1
+          mode: box
+command:
+  name: Device command
+  description: Execute one command. Alarm test plays an alarm; restart reboots the
+    device.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    command:
+      name: Command
+      required: true
+      selector:
+        select:
+          options:
+          - next_mode
+          - prev_mode
+          - clear_message
+          - clear_message_all
+          - timer_stop
+          - timer_pause
+          - timer_resume
+          - timer_restart
+          - stopwatch
+          - stopwatch_resume
+          - stopwatch_stop
+          - stopwatch_restart
+          - stopwatch_reset
+          - stopwatch_clear
+          - pomodoro_start
+          - pomodoro_stop
+          - pomodoro_pause
+          - pomodoro_resume
+          - pomodoro_restart
+          - alarm_stop
+          - alarm_snooze
+          - buzzer_stop
+          - save
+          - restart
+          - display_on
+          - display_off
+          - brightness_up
+          - brightness_down
+          - alarm_test
+          - alarm2_test
+          - alarm3_test
+          - alarm4_test
+set_rotation:
+  name: Set automatic rotation
+  description: Enable or freeze automatic mode rotation. Firmware does not report
+    rotation state.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    enabled:
+      name: Enabled
+      required: true
+      selector:
+        boolean: {}
+set_language:
+  name: Set language
+  description: Choose a language supported by the firmware.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    language:
+      name: Language
+      required: true
+      selector:
+        select:
+          options:
+          - af
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - eo
+          - et
+          - fi
+          - fr
+          - de
+          - hu
+          - it
+          - ga
+          - ja
+          - lv
+          - lt
+          - 'no'
+          - pl
+          - pt
+          - ro
+          - ru
+          - sr
+          - sk
+          - sl
+          - es
+          - sv
+          - sw
+          - tr
+set_alarm:
+  name: Configure alarm
+  description: 'Set one of four alarms. Days: Sunday=0, Monday=1, ..., Saturday=6.
+    Uses the device timezone.'
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    alarm:
+      name: Alarm
+      required: true
+      default: 1
+      selector:
+        number:
+          min: 1
+          max: 4
+          step: 1
+          mode: box
+    time:
+      name: Time
+      required: true
+      selector:
+        text: {}
+      description: HH:MM, in the ESPTimeCast timezone.
+    days:
+      name: Days
+      required: true
+      example:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      selector:
+        object: {}
+    enabled:
+      name: Enabled
+      required: false
+      default: true
+      selector:
+        boolean: {}
+    sound:
+      name: Sound
+      required: false
+      default: 3
+      selector:
+        number:
+          min: 0
+          max: 3
+          step: 1
+          mode: box
+    brightness:
+      name: Brightness
+      required: false
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 15
+          step: 1
+          mode: box
+    snooze:
+      name: Snooze
+      required: false
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 60
+          step: 1
+          mode: box
+set_countdown:
+  name: Configure countdown
+  description: Configure the event countdown. Date and time use the device timezone,
+    not the Home Assistant timezone.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    date:
+      name: Date
+      required: true
+      selector:
+        text: {}
+      description: YYYY-MM-DD, in the ESPTimeCast timezone.
+    time:
+      name: Time
+      required: true
+      selector:
+        text: {}
+      description: HH:MM, in the ESPTimeCast timezone.
+    label:
+      name: Label
+      required: false
+      default: ''
+      selector:
+        text: {}
+    enabled:
+      name: Enabled
+      required: false
+      default: true
+      selector:
+        boolean: {}
+    dramatic:
+      name: Dramatic
+      required: false
+      default: false
+      selector:
+        boolean: {}
+play_sound:
+  name: Play sound
+  description: Play beep (1), chirp (2) or alarm (3). Repeating sound continues until
+    Silence buzzer.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    sound:
+      name: Sound
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 3
+          step: 1
+          mode: box
+    volume:
+      name: Volume
+      required: false
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 10
+          step: 1
+          mode: box
+    repeat:
+      name: Repeat
+      required: false
+      default: false
+      selector:
+        boolean: {}
+set_buzzer_event:
+  name: Configure buzzer event
+  description: Assign a sound to an event. Sound 0 disables the event.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    event:
+      name: Event
+      required: true
+      selector:
+        select:
+          options:
+          - alarm
+          - countdown
+          - timer
+          - pomodoro_work
+          - pomodoro_break
+          - stopwatch
+    sound:
+      name: Sound
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 3
+          step: 1
+          mode: box
+    repeat:
+      name: Repeat
+      required: false
+      default: false
+      selector:
+        boolean: {}
+configure_display:
+  name: Configure dimming
+  description: Change dimming settings while preserving omitted values. Disable the
+    other dimming mode when enabling one.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    autoDimmingEnabled:
+      name: Autodimmingenabled
+      required: false
+      selector:
+        boolean: {}
+    dimmingEnabled:
+      name: Dimmingenabled
+      required: false
+      selector:
+        boolean: {}
+    dimStartHour:
+      name: Dimstarthour
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 23
+          step: 1
+          mode: box
+    dimStartMinute:
+      name: Dimstartminute
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 59
+          step: 1
+          mode: box
+    dimEndHour:
+      name: Dimendhour
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 23
+          step: 1
+          mode: box
+    dimEndMinute:
+      name: Dimendminute
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 59
+          step: 1
+          mode: box
+    dimBrightness:
+      name: Dimbrightness
+      required: false
+      selector:
+        number:
+          min: -1
+          max: 15
+          step: 1
+          mode: box
+      description: -1 turns the display off during dimming.
+    clockOnlyDuringDimming:
+      name: Clockonlyduringdimming
+      required: false
+      selector:
+        boolean: {}
+configure_clock:
+  name: Configure clock and data source
+  description: Change time settings. ntpServer2 also configures Nightscout, RSS and
+    social data sources. Durations are milliseconds.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    timeZone:
+      name: Timezone
+      required: false
+      selector:
+        text: {}
+    clockDuration:
+      name: Clockduration
+      required: false
+      selector:
+        number:
+          min: 1000
+          max: 3600000
+          step: 1
+          mode: box
+    ntpServer1:
+      name: Ntpserver1
+      required: false
+      selector:
+        text: {}
+    ntpServer2:
+      name: Ntpserver2
+      required: false
+      selector:
+        text: {}
+    showDayOfWeek:
+      name: Showdayofweek
+      required: false
+      selector:
+        boolean: {}
+    colonBlinkEnabled:
+      name: Colonblinkenabled
+      required: false
+      selector:
+        boolean: {}
+    showDate:
+      name: Showdate
+      required: false
+      selector:
+        boolean: {}
+    twelveHourToggle:
+      name: Twelvehourtoggle
+      required: false
+      selector:
+        boolean: {}
+configure_weather:
+  name: Configure weather
+  description: Set weather location, credentials and display options. openWeatherCity
+    is latitude; openWeatherCountry is longitude. Duration is milliseconds.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    weatherDuration:
+      name: Weatherduration
+      required: false
+      selector:
+        number:
+          min: 1000
+          max: 3600000
+          step: 1
+          mode: box
+    openWeatherApiKey:
+      name: Openweatherapikey
+      required: false
+      selector:
+        text:
+          type: password
+    openWeatherCity:
+      name: Openweathercity
+      required: false
+      selector:
+        text: {}
+    openWeatherCountry:
+      name: Openweathercountry
+      required: false
+      selector:
+        text: {}
+    weatherUnits:
+      name: Weatherunits
+      required: false
+      selector:
+        select:
+          options:
+          - metric
+          - imperial
+    showHumidity:
+      name: Showhumidity
+      required: false
+      selector:
+        boolean: {}
+    showWeatherDescription:
+      name: Showweatherdescription
+      required: false
+      selector:
+        boolean: {}
+configure_buzzer:
+  name: Configure buzzer hardware
+  description: Configure a physical GPIO pin (255 disables the pin), enable state
+    and volume. Use pins appropriate for your board.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    pin:
+      name: Pin
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 1
+          mode: box
+    enabled:
+      name: Enabled
+      required: true
+      selector:
+        boolean: {}
+    volume:
+      name: Volume
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 10
+          step: 1
+          mode: box
+configure_button:
+  name: Configure physical button
+  description: Update one of four buttons, preserving the others. Pin -1 disables
+    this button. Action names follow the firmware API.
+  fields:
+    device_id:
+      name: Device id
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    button:
+      name: Button
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 4
+          step: 1
+          mode: box
+    pin:
+      name: Pin
+      required: true
+      selector:
+        number:
+          min: -1
+          max: 48
+          step: 1
+          mode: box
+    short_action:
+      name: Short action
+      required: true
+      selector:
+        text: {}
+    long_action:
+      name: Long action
+      required: true
+      selector:
+        text: {}

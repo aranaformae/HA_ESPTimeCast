@@ -1,0 +1,14 @@
+{
+  "domain": "esptimecast",
+  "name": "ESPTimeCast",
+  "codeowners": [
+    "@aranaformae"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/aranaformae/HA_ESPTimeCast",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/aranaformae/HA_ESPTimeCast/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

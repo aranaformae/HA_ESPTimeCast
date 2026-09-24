@@ -1,0 +1,248 @@
+{
+  "identity": {
+    "id": "esptimecast-test",
+    "version": "2.1.14",
+    "hardware": "MAX7219_FC16",
+    "board": "esp32s3"
+  },
+  "display": {
+    "displayMode": 0,
+    "displayBusy": false,
+    "allowInterrupt": true,
+    "mode": "clock",
+    "message": "",
+    "displayOff": false,
+    "brightness": 10,
+    "lastBrightnessBeforeOff": 7
+  },
+  "runtime": {
+    "device_runtime": "2338:01:48",
+    "session_runtime": 602968,
+    "wifi_signal": -51,
+    "time_synced": true,
+    "localTime": "18:09:00",
+    "epochTime": 1790266140
+  },
+  "countdown": {
+    "enabled": false,
+    "targetTimestamp": 0,
+    "label": "VERJAARDAG FABIEN",
+    "isDramatic": true,
+    "remaining": 0
+  },
+  "weather": {
+    "currentTemperature": 19,
+    "currentTemperatureFull": 18.5,
+    "weatherDescription": "bewolkt",
+    "descriptionShort": "Clouds",
+    "icon": "04d",
+    "city": "Test City",
+    "currentHumidity": 56,
+    "sunriseHour": 7,
+    "sunriseMinute": 26,
+    "sunsetHour": 19,
+    "sunsetMinute": 32
+  },
+  "nightscout": {
+    "active": false,
+    "glucose": 0,
+    "trend": "null",
+    "lastReadingEpoch": null,
+    "minutesSinceReading": null,
+    "isOutdated": true
+  },
+  "sns": {
+    "type": "none",
+    "youtubeSubscribers": 0,
+    "instagramFollowers": 0,
+    "rssTitle": "null"
+  },
+  "config": {
+    "weatherUnits": "metric",
+    "clockDuration": 20000,
+    "weatherDuration": 8000,
+    "timeZone": "Europe/Amsterdam",
+    "language": "nl",
+    "flipDisplay": false,
+    "twelveHourToggle": false,
+    "showDate": false,
+    "showHumidity": true
+  },
+  "dimming": {
+    "dimmingEnabled": false,
+    "dimStartHour": 18,
+    "dimStartMinute": 0,
+    "dimEndHour": 8,
+    "dimEndMinute": 0,
+    "autoDimmingEnabled": true,
+    "clockOnlyDuringDimming": true
+  },
+  "donations": {
+    "hideDonationMsg": true,
+    "nextDonationTime": "N/A"
+  },
+  "pins": {
+    "clk": 4,
+    "cs": 5,
+    "data": 6
+  },
+  "buttons": [
+    {
+      "pin": -1,
+      "shortAction": "",
+      "longAction": ""
+    },
+    {
+      "pin": -1,
+      "shortAction": "",
+      "longAction": ""
+    },
+    {
+      "pin": -1,
+      "shortAction": "",
+      "longAction": ""
+    },
+    {
+      "pin": -1,
+      "shortAction": "",
+      "longAction": ""
+    }
+  ],
+  "buzzer": {
+    "enabled": false,
+    "pin": 255,
+    "volume": 7,
+    "playing": false,
+    "repeating": false,
+    "events": [
+      {
+        "name": "alarm",
+        "enabled": true,
+        "sound": 3,
+        "repeat": true
+      },
+      {
+        "name": "countdown",
+        "enabled": true,
+        "sound": 3,
+        "repeat": true
+      },
+      {
+        "name": "timer",
+        "enabled": true,
+        "sound": 3,
+        "repeat": true
+      },
+      {
+        "name": "pomodoro_work",
+        "enabled": true,
+        "sound": 3,
+        "repeat": false
+      },
+      {
+        "name": "pomodoro_break",
+        "enabled": true,
+        "sound": 2,
+        "repeat": false
+      },
+      {
+        "name": "stopwatch",
+        "enabled": true,
+        "sound": 1,
+        "repeat": false
+      },
+      {
+        "name": "button",
+        "enabled": true,
+        "sound": 1,
+        "repeat": false
+      }
+    ]
+  },
+  "alarm": {
+    "alarms": [
+      {
+        "enabled": false,
+        "hour": 7,
+        "minute": 0,
+        "days": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "snoozeMinutes": 15,
+        "brightness": 10,
+        "sound": 3
+      },
+      {
+        "enabled": false,
+        "hour": 7,
+        "minute": 0,
+        "days": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "snoozeMinutes": 15,
+        "brightness": 10,
+        "sound": 3
+      },
+      {
+        "enabled": false,
+        "hour": 7,
+        "minute": 0,
+        "days": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "snoozeMinutes": 15,
+        "brightness": 10,
+        "sound": 3
+      },
+      {
+        "enabled": false,
+        "hour": 7,
+        "minute": 0,
+        "days": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "snoozeMinutes": 15,
+        "brightness": 10,
+        "sound": 3
+      }
+    ],
+    "ringing": false,
+    "ringingIndex": -1
+  },
+  "debug": {
+    "freeHeap": 203992,
+    "minFreeHeap": 128936,
+    "maxAllocHeap": 110580,
+    "heapFrag": 46,
+    "resetReason": 3,
+    "resetReasonText": "SOFTWARE",
+    "uptime": 602968,
+    "sketchFree": 1966080,
+    "wifiRssi": -51,
+    "wifiChannel": 6
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "title": "ESPTimeCast",
+  "config": {
+    "step": {
+      "user": {
+        "title": "ESPTimeCast",
+        "description": "Connect to your ESPTimeCast, for example esptimecast.local.",
+        "data": {
+          "host": "IP address or hostname"
+        }
+      },
+      "reconfigure": {
+        "title": "Change connection",
+        "data": {
+          "host": "IP address or hostname"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to a supported ESPTimeCast.",
+      "invalid_host": "Enter a valid HTTP hostname or IP address."
+    },
+    "abort": {
+      "already_configured": "This address is already configured.",
+      "reconfigure_successful": "Connection updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Polling interval (seconds)"
+        }
+      }
+    }
+  }
+}

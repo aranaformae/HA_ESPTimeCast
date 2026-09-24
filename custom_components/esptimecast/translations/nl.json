@@ -1,0 +1,37 @@
+{
+  "title": "ESPTimeCast",
+  "config": {
+    "step": {
+      "user": {
+        "title": "ESPTimeCast",
+        "description": "Verbind met je ESPTimeCast, bijvoorbeeld esptimecast.local.",
+        "data": {
+          "host": "IP-adres of hostnaam"
+        }
+      },
+      "reconfigure": {
+        "title": "Verbinding wijzigen",
+        "data": {
+          "host": "IP-adres of hostnaam"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Geen verbinding met een ondersteunde ESPTimeCast mogelijk.",
+      "invalid_host": "Voer een geldige HTTP-hostnaam of IP-adres in."
+    },
+    "abort": {
+      "already_configured": "Dit adres is al ingesteld.",
+      "reconfigure_successful": "Verbinding bijgewerkt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Statusinterval (seconden)"
+        }
+      }
+    }
+  }
+}
