@@ -19,6 +19,7 @@ async def device():
         message_code=200,
         saved={
             "customMessage": "BASE",
+            "dimBrightness": 2,
             "showDayOfWeek": True,
             "colonBlinkEnabled": True,
             "showWeatherDescription": True,
@@ -38,6 +39,14 @@ async def device():
             return web.Response(status=404)
         data = dict(await request.post())
         sim.calls.append((request.path, data))
+        if request.path == "/save_alarm":
+            for key, value in data.items():
+                prefix, field = key.split("_", 1)
+                alarm = sim.state["alarm"]["alarms"][int(prefix[5:])]
+                if field.startswith("day"):
+                    alarm["days"][int(field[3:])] = value == "1"
+                else:
+                    alarm[field] = value == "1" if field == "enabled" else int(value)
         if "message" in data:
             if sim.message_code != 200:
                 return web.Response(status=sim.message_code)

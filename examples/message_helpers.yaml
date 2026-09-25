@@ -1,0 +1,20 @@
+# Optional HA package: /config/packages/esptimecast_messages.yaml.
+# Enable homeassistant: packages: !include_dir_named packages in configuration.yaml.
+# Replace light.esptimecast_display if your entity has another ID.
+input_text:
+  esptimecast_message:
+    name: ESPTimeCast bericht
+    max: 120
+script:
+  esptimecast_send_message:
+    alias: ESPTimeCast bericht verzenden
+    mode: single
+    sequence:
+      - condition: template
+        value_template: "{{ states('input_text.esptimecast_message') | trim | length > 0 }}"
+      - action: esptimecast.queue_message
+        data:
+          device_id: "{{ device_id('light.esptimecast_display') }}"
+          message: "{{ states('input_text.esptimecast_message') }}"
+          seconds: 15
+          ttl: 120

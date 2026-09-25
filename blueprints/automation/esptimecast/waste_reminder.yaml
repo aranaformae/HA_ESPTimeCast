@@ -1,0 +1,50 @@
+blueprint:
+  name: ESPTimeCast - Afvalherinnering
+  description: Controleer dagelijks een afvalsensor op een ingestelde status, bijvoorbeeld morgen of 1 (dagen tot ophalen).
+  domain: automation
+  homeassistant:
+    min_version: 2026.9.0
+  input:
+    device:
+      name: ESPTimeCast
+      selector:
+        device:
+          integration: esptimecast
+    sensor:
+      name: Afvalsensor
+      selector:
+        entity:
+          filter:
+            domain: sensor
+    expected:
+      name: Status waarbij je herinnerd wilt worden
+      default: '1'
+      selector:
+        text: {}
+    at:
+      name: Tijdstip van de herinnering
+      default: '19:00:00'
+      selector:
+        time: {}
+    message:
+      name: Bericht (maximaal 120 tekens)
+      default: Zet de afvalcontainer buiten
+      selector:
+        text: {}
+variables:
+  waste_sensor: !input sensor
+  expected_state: !input expected
+triggers:
+  - trigger: time
+    at: !input at
+conditions:
+  - condition: template
+    value_template: "{{ has_value(waste_sensor) and states(waste_sensor) == expected_state }}"
+actions:
+  - action: esptimecast.queue_message
+    data:
+      device_id: !input device
+      message: !input message
+      seconds: 20
+      ttl: 300
+mode: single

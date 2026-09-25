@@ -1,0 +1,131 @@
+# Replace esptimecast_ with your actual entity prefix; verify IDs in Settings > Entities.
+title: ESPTimeCast
+views:
+- title: Klok
+  path: esptimecast
+  icon: mdi:clock-digital
+  cards:
+  - type: markdown
+    content: '## ESPTimeCast
+
+      Bediening en status. Dimstatus en effectieve helderheid zijn berekend, geen
+      hardwaremeting.'
+  - type: entities
+    title: Display
+    show_header_toggle: false
+    entities:
+    - light.esptimecast_display
+    - number.esptimecast_brightness_level
+    - select.esptimecast_display_mode
+    - text.esptimecast_persistent_message
+    - switch.esptimecast_automatic_dimming
+    - switch.esptimecast_scheduled_dimming
+    - binary_sensor.esptimecast_dimming_active_calculated
+    - sensor.esptimecast_dimming_brightness
+    - sensor.esptimecast_effective_brightness_calculated
+  - type: entities
+    title: Tijdelijk bericht
+    show_header_toggle: false
+    entities:
+    - input_text.esptimecast_message
+    - script.esptimecast_send_message
+    - sensor.esptimecast_message_queue
+    - button.esptimecast_clear_temporary_message
+  - type: entities
+    title: Timer
+    show_header_toggle: false
+    entities:
+    - number.esptimecast_timer_duration
+    - button.esptimecast_start_timer
+    - button.esptimecast_timer_5_minutes
+    - button.esptimecast_timer_10_minutes
+    - button.esptimecast_timer_25_minutes
+    - button.esptimecast_pause_timer
+    - button.esptimecast_resume_timer
+    - button.esptimecast_stop_timer
+  - type: entities
+    title: Pomodoro en stopwatch
+    show_header_toggle: false
+    entities:
+    - button.esptimecast_start_pomodoro
+    - button.esptimecast_pause_pomodoro
+    - button.esptimecast_resume_pomodoro
+    - button.esptimecast_stop_pomodoro
+    - button.esptimecast_toggle_stopwatch
+    - button.esptimecast_pause_stopwatch
+    - button.esptimecast_resume_stopwatch
+    - button.esptimecast_exit_stopwatch
+  - type: entities
+    title: Status
+    show_header_toggle: false
+    entities:
+    - sensor.esptimecast_display_mode
+    - sensor.esptimecast_current_message
+    - sensor.esptimecast_wi_fi_signal
+    - binary_sensor.esptimecast_alarm_ringing
+    - button.esptimecast_dismiss_alarm
+    - button.esptimecast_snooze_alarm
+  - type: entities
+    title: Alarm 1
+    show_header_toggle: false
+    entities:
+    - switch.esptimecast_alarm_1
+    - time.esptimecast_alarm_1_time
+    - number.esptimecast_alarm_1_snooze
+    - number.esptimecast_alarm_1_brightness
+    - select.esptimecast_alarm_1_sound
+    - switch.esptimecast_alarm_1_monday
+    - switch.esptimecast_alarm_1_tuesday
+    - switch.esptimecast_alarm_1_wednesday
+    - switch.esptimecast_alarm_1_thursday
+    - switch.esptimecast_alarm_1_friday
+    - switch.esptimecast_alarm_1_saturday
+    - switch.esptimecast_alarm_1_sunday
+  - type: entities
+    title: Alarm 2
+    show_header_toggle: false
+    entities:
+    - switch.esptimecast_alarm_2
+    - time.esptimecast_alarm_2_time
+    - number.esptimecast_alarm_2_snooze
+    - number.esptimecast_alarm_2_brightness
+    - select.esptimecast_alarm_2_sound
+    - switch.esptimecast_alarm_2_monday
+    - switch.esptimecast_alarm_2_tuesday
+    - switch.esptimecast_alarm_2_wednesday
+    - switch.esptimecast_alarm_2_thursday
+    - switch.esptimecast_alarm_2_friday
+    - switch.esptimecast_alarm_2_saturday
+    - switch.esptimecast_alarm_2_sunday
+  - type: entities
+    title: Alarm 3
+    show_header_toggle: false
+    entities:
+    - switch.esptimecast_alarm_3
+    - time.esptimecast_alarm_3_time
+    - number.esptimecast_alarm_3_snooze
+    - number.esptimecast_alarm_3_brightness
+    - select.esptimecast_alarm_3_sound
+    - switch.esptimecast_alarm_3_monday
+    - switch.esptimecast_alarm_3_tuesday
+    - switch.esptimecast_alarm_3_wednesday
+    - switch.esptimecast_alarm_3_thursday
+    - switch.esptimecast_alarm_3_friday
+    - switch.esptimecast_alarm_3_saturday
+    - switch.esptimecast_alarm_3_sunday
+  - type: entities
+    title: Alarm 4
+    show_header_toggle: false
+    entities:
+    - switch.esptimecast_alarm_4
+    - time.esptimecast_alarm_4_time
+    - number.esptimecast_alarm_4_snooze
+    - number.esptimecast_alarm_4_brightness
+    - select.esptimecast_alarm_4_sound
+    - switch.esptimecast_alarm_4_monday
+    - switch.esptimecast_alarm_4_tuesday
+    - switch.esptimecast_alarm_4_wednesday
+    - switch.esptimecast_alarm_4_thursday
+    - switch.esptimecast_alarm_4_friday
+    - switch.esptimecast_alarm_4_saturday
+    - switch.esptimecast_alarm_4_sunday

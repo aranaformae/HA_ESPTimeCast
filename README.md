@@ -8,7 +8,7 @@ Ontwikkeld op basis van firmware **2.1.14**, met de echte status van een **ESP32
 
 ### Handmatig — direct mogelijk
 
-1. Pak `esptimecast-1.0.1.zip` uit in de Home Assistant-configuratiemap. Het resultaat moet `/config/custom_components/esptimecast/manifest.json` zijn.
+1. Pak `esptimecast-1.1.0.zip` uit in de Home Assistant-configuratiemap. Het resultaat moet `/config/custom_components/esptimecast/manifest.json` zijn.
 2. Herstart Home Assistant.
 3. Ga naar **Instellingen → Apparaten & diensten → Integratie toevoegen → ESPTimeCast**.
 4. Vul `esptimecast.local` in, of het IP-adres. Home Assistant moet het apparaat kunnen bereiken. Een optionele HTTP-poort wordt ondersteund.
@@ -159,6 +159,47 @@ Dimhelderheid `-1` betekent uit; `0` is de laagste zichtbare hardwarehelderheid.
 `clockDuration` en `weatherDuration` gebruiken **milliseconden**, zoals de firmware. De volledige velden staan in de actie-editor. Hardwarepin-keuze en knopacties moeten bij je bord en firmware passen.
 
 Sommige snelle firmwarecommando's veranderen alleen de actieve instellingen. Gebruik **Save settings to device** als je deze na stroomuitval wilt behouden. De `configure_*`-acties, alarmconfiguratie en permanente tekst worden rechtstreeks opgeslagen. Opslaan door de firmware kan kort uitgesteld zijn.
+
+## Nieuw in v1.1: directe bediening
+
+Op de apparaatpagina staan nu per alarm een **tijdkiezer**, zeven **dagschakelaars**, **snoozeduur**, **helderheid** en **geluidskeuze**. Een wijziging raakt uitsluitend dat veld van dat alarm; andere alarmen en instellingen blijven behouden. Tijd wordt met minuutprecisie ingesteld in de tijdzone van het apparaat.
+
+Met **Timer duration** kies je 1–1440 minuten en met **Start timer** start je die duur. De keuze wordt door Home Assistant hersteld na herladen/herstarten; het is geen resterende-tijdsensor. Er zijn ook directe knoppen voor **5, 10 en 25 minuten**.
+
+De bestaande helderheidsbediening geeft de door de firmware gerapporteerde ingestelde waarde weer. **Dimming brightness** toont de opgeslagen dimstand. **Dimming active (calculated)** berekent het dimschema aan de hand van apparaattijd en zonsopkomst/-ondergang of geplande tijden. **Effective brightness (calculated)** toont de verwachte intensiteit, inclusief alarmoverride; `-1` betekent uit. Deze twee entiteiten zijn uitdrukkelijk berekeningen, geen hardwaremetingen. Ontbrekende gegevens geven een onbekende uitkomst.
+
+## Berichtenwachtrij
+
+```yaml
+action: esptimecast.queue_message
+data:
+  device_id: VERVANG_DOOR_APPARAAT_ID
+  message: "De was is klaar!"
+  seconds: 15
+  ttl: 120
+  speed: 80
+```
+
+Berichten worden per apparaat op volgorde afgeleverd in tijdsloten van `seconds` (1–300 seconden), met één seconde marge ertussen. `ttl` (1–3600 seconden) is de maximale wachttijd vóór het verzenden; hij verkort niet de weergaveduur van een al gestart bericht. Maximaal 20 berichten kunnen wachten. De wachtrij forceert geen onderbreking van een beschermd bericht, alarm of timer; bij een bezet apparaat of verbindingsfout probeert ze opnieuw tot het bericht vervalt. Een netwerktime-out kan onduidelijk maken of een bericht is aangekomen; een herhaalde aflevering is dan mogelijk.
+
+**Message queue** toont het aantal wachtende berichten, of er een bericht wordt weergegeven, het aantal verlopen berichten en de laatste uitkomst. Berichtinhoud wordt niet in die sensor opgeslagen. **esptimecast.clear_message_queue** verwijdert wachtende berichten; een al weergegeven bericht eindigt na zijn eigen duur. De wachtrij wordt bewust niet bewaard bij herstarten of herladen, zodat oude meldingen niet later onverwacht verschijnen.
+
+De wachtrij ordent uitsluitend berichten die via `queue_message` worden aangeboden. Rechtstreekse berichten, de webinterface of andere clients kunnen onbeschermde teksten blijven vervangen. `send_message` houdt zijn bestaande directe gedrag.
+
+## Blueprints
+
+Importeer via **Instellingen → Automatiseringen & scènes → Blueprints → Blueprint importeren** een van deze GitHub-links en kies daarna je apparaat en bronentiteit:
+
+- [Deurbel of statusbericht](https://github.com/aranaformae/HA_ESPTimeCast/blob/main/blueprints/automation/esptimecast/doorbell.yaml): tekst bij een gekozen statusovergang; negeert herstel vanuit onbekend/onbeschikbaar.
+- [Wasmachine/droger klaar](https://github.com/aranaformae/HA_ESPTimeCast/blob/main/blueprints/automation/esptimecast/appliance_finished.yaml): eerst actief vermogen gedurende één minuut, daarna langdurig laag vermogen. Gebruik een sensor in watt en een lagere klaar-drempel dan de actief-drempel. Een lopende detectie wordt na HA-herstart niet hervat; na 12 uur stopt het wachten.
+- [Afvalherinnering](https://github.com/aranaformae/HA_ESPTimeCast/blob/main/blueprints/automation/esptimecast/waste_reminder.yaml): controleert dagelijks de exacte status van je afvalsensor, bijvoorbeeld `1` voor morgen.
+- [Agenda-afspraak](https://github.com/aranaformae/HA_ESPTimeCast/blob/main/blueprints/automation/esptimecast/calendar_reminder.yaml): de afspraaktitel vooraf tonen, standaard 15 minuten voor de start.
+
+Alle blueprints gebruiken de berichtenwachtrij met een vervaltijd. De benodigde bronentiteiten moeten al in Home Assistant bestaan. HACS installeert blueprints niet automatisch; importeer ze via bovenstaande links of kopieer de meegeleverde `blueprints`-map naar je configuratiemap.
+
+## Voorbeeld-dashboard
+
+Zie [de dashboardhandleiding](examples/README.md) en [dashboard.yaml](examples/dashboard.yaml). Het bevat displaybediening, permanente en tijdelijke tekst, dimstatus, timerpresets, stopwatch/Pomodoro en alle vier alarmen. Het gebruikt standaardkaarten. Voor een tijdelijk tekstveld met verzendknop wordt een optioneel helperpakket meegeleverd; controleer de entiteits-ID's voordat je het dashboard gebruikt.
 
 ## Firmwarebeperkingen
 

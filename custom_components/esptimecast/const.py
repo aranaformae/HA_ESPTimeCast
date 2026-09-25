@@ -2,7 +2,17 @@
 
 DOMAIN = "esptimecast"
 DEFAULT_INTERVAL = 15
-PLATFORMS = ["sensor", "binary_sensor", "light", "switch", "number", "select", "text", "button"]
+PLATFORMS = [
+    "sensor",
+    "binary_sensor",
+    "light",
+    "switch",
+    "number",
+    "select",
+    "text",
+    "button",
+    "time",
+]
 MODES = {
     "clock": "0",
     "weather": "1",

@@ -50,6 +50,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
             )
         )
     async_add_entities(ESPTimeCastSwitch(entry.runtime_data, *item) for item in items)
+    async_add_entities(
+        AlarmDay(entry.runtime_data, i, day)
+        for i in range(len(entry.runtime_data.data.get("alarm", {}).get("alarms", [])))
+        for day in range(7)
+    )
 
 
 class ESPTimeCastSwitch(ESPTimeCastEntity, SwitchEntity):
@@ -81,3 +86,25 @@ class ESPTimeCastSwitch(ESPTimeCastEntity, SwitchEntity):
             await dispatch(client, "configure_" + section, fields)
 
         await self.coordinator.execute(send)
+
+
+class AlarmDay(ESPTimeCastEntity, SwitchEntity):
+    def __init__(self, coordinator, index, day):
+        names = ("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+        super().__init__(
+            coordinator,
+            f"alarm_{index + 1}_day_{day}",
+            f"Alarm {index + 1} {names[day]}",
+            f"alarm.alarms.{index}.days.{day}",
+        )
+        self.index, self.day = index, day
+
+    @property
+    def is_on(self):
+        return boolean(self.value)
+
+    async def async_turn_on(self, **kwargs):
+        await self.coordinator.set_alarm_fields(self.index, **{f"day{self.day}": True})
+
+    async def async_turn_off(self, **kwargs):
+        await self.coordinator.set_alarm_fields(self.index, **{f"day{self.day}": False})

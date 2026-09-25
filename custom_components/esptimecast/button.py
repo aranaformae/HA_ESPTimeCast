@@ -38,6 +38,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ESPTimeCastButton(entry.runtime_data, key, name) for key, name in BUTTONS.items()
     )
 
+    async_add_entities(TimerButton(entry.runtime_data, minutes) for minutes in (None, 5, 10, 25))
+
 
 class ESPTimeCastButton(ESPTimeCastEntity, ButtonEntity):
     def __init__(self, coordinator, key, name):
@@ -48,3 +50,14 @@ class ESPTimeCastButton(ESPTimeCastEntity, ButtonEntity):
 
     async def async_press(self):
         await self.coordinator.action(self.action_name)
+
+
+class TimerButton(ESPTimeCastEntity, ButtonEntity):
+    def __init__(self, coordinator, minutes):
+        key = "start_timer" if minutes is None else f"timer_{minutes}_minutes"
+        name = "Start timer" if minutes is None else f"Timer {minutes} minutes"
+        super().__init__(coordinator, key, name)
+        self.minutes = minutes
+
+    async def async_press(self):
+        await self.coordinator.action("timer", f"{self.minutes or self.coordinator.timer_minutes}M")

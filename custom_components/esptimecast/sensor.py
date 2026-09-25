@@ -5,9 +5,11 @@ import re
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.entity import EntityCategory
 
+from .dimming import calculated_brightness
 from .entity import ESPTimeCastEntity
 
 SENSORS = [
+    ("dim_brightness", "Dimming brightness", "saved.dimBrightness", None, None),
     ("mode", "Display mode", "display.mode", None, None),
     ("message", "Current message", "display.message", None, None),
     ("wifi", "Wi-Fi signal", "runtime.wifi_signal", "dBm", "signal_strength"),
@@ -28,6 +30,17 @@ SENSORS = [
 
 async def async_setup_entry(hass, entry, async_add_entities):
     async_add_entities(ESPTimeCastSensor(entry.runtime_data, *item) for item in SENSORS)
+
+    async_add_entities(
+        [
+            CalculatedBrightness(
+                entry.runtime_data,
+                "effective_brightness_calculated",
+                "Effective brightness (calculated)",
+            ),
+            QueueSensor(entry.runtime_data, "message_queue", "Message queue"),
+        ]
+    )
 
 
 class ESPTimeCastSensor(ESPTimeCastEntity, SensorEntity):
@@ -64,3 +77,32 @@ class ESPTimeCastSensor(ESPTimeCastEntity, SensorEntity):
         if self._key == "message":
             return {"full_message": self.value}
         return None
+
+
+class CalculatedBrightness(ESPTimeCastEntity, SensorEntity):
+    @property
+    def native_value(self):
+        return calculated_brightness(self.coordinator.data)
+
+    @property
+    def extra_state_attributes(self):
+        return {"source": "calculated_not_measured", "off_value": -1}
+
+
+class QueueSensor(ESPTimeCastEntity, SensorEntity):
+    @property
+    def available(self):
+        return True
+
+    @property
+    def native_value(self):
+        return len(self.coordinator.messages.pending)
+
+    @property
+    def extra_state_attributes(self):
+        queue = self.coordinator.messages
+        return {
+            "displaying_queued_message": queue.active,
+            "expired_messages": queue.expired,
+            "last_result": queue.last_result,
+        }

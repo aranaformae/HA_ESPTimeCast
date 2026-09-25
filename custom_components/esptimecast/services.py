@@ -39,6 +39,16 @@ def time_string(value):
 
 TARGET = {vol.Required("device_id"): cv.string}
 SCHEMAS = {
+    "queue_message": vol.Schema(
+        {
+            **TARGET,
+            vol.Required("message"): vol.All(cv.string, vol.Length(min=1, max=120)),
+            vol.Optional("seconds", default=10): integer(1, 300),
+            vol.Optional("ttl", default=120): integer(1, 3600),
+            vol.Optional("speed", default=80): integer(10, 200),
+        }
+    ),
+    "clear_message_queue": vol.Schema(TARGET),
     "send_message": vol.Schema(
         {
             **TARGET,
@@ -324,6 +334,15 @@ def async_register_services(hass):
         )
         if len(matches) != 1:
             raise ServiceValidationError("Select one loaded ESPTimeCast device")
+
+        if call.service == "queue_message":
+            matches[0].messages.enqueue(
+                data["message"], data["seconds"], data["ttl"], data["speed"]
+            )
+            return
+        if call.service == "clear_message_queue":
+            await matches[0].messages.clear()
+            return
 
         async def send(client):
             await dispatch(client, call.service, data)

@@ -1,0 +1,78 @@
+blueprint:
+  name: ESPTimeCast - Wasmachine of droger klaar
+  description: Detecteer eerst actief vermogen, wacht daarna op langdurig laag vermogen. Gebruik een vermogenssensor in watt. Na een HA-herstart wordt een lopende detectie niet hervat.
+  domain: automation
+  homeassistant:
+    min_version: 2026.9.0
+  input:
+    device:
+      name: ESPTimeCast
+      selector:
+        device:
+          integration: esptimecast
+    power:
+      name: Vermogen (W)
+      selector:
+        entity:
+          filter:
+            domain: sensor
+            device_class: power
+    running:
+      name: Actief boven (W)
+      default: 10
+      selector:
+        number:
+          min: 1
+          max: 3000
+          mode: box
+    idle:
+      name: Klaar onder (W, lager dan actief-drempel)
+      default: 3
+      selector:
+        number:
+          min: 0.1
+          max: 100
+          step: 0.1
+          mode: box
+    idle_minutes:
+      name: Minuten laag vermogen
+      default: 3
+      selector:
+        number:
+          min: 1
+          max: 30
+          mode: box
+    message:
+      name: Bericht (maximaal 120 tekens)
+      default: De was is klaar!
+      selector:
+        text: {}
+variables:
+  running_threshold: !input running
+  idle_threshold: !input idle
+triggers:
+  - trigger: numeric_state
+    entity_id: !input power
+    above: !input running
+    for:
+      minutes: 1
+conditions:
+  - condition: template
+    value_template: '{{ idle_threshold < running_threshold }}'
+actions:
+  - wait_for_trigger:
+      - trigger: numeric_state
+        entity_id: !input power
+        below: !input idle
+        for:
+          minutes: !input idle_minutes
+    timeout: '12:00:00'
+    continue_on_timeout: false
+  - action: esptimecast.queue_message
+    data:
+      device_id: !input device
+      message: !input message
+      seconds: 20
+      ttl: 300
+mode: single
+max_exceeded: silent

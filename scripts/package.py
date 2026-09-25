@@ -13,6 +13,10 @@ with ZipFile(output, "w", ZIP_DEFLATED) as archive:
     for path in sorted(integration.rglob("*")):
         if path.is_file() and path.suffix in (".py", ".json", ".yaml", ".png"):
             archive.write(path, path.relative_to(root))
+    for folder in ("blueprints", "examples"):
+        for path in sorted((root / folder).rglob("*")):
+            if path.is_file() and path.suffix in (".yaml", ".md"):
+                archive.write(path, path.relative_to(root))
     for name in ("README.md", "LICENSE", "hacs.json"):
         archive.write(root / name, name)
 print(output)

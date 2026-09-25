@@ -664,3 +664,48 @@ configure_button:
       required: true
       selector:
         text: {}
+queue_message:
+  name: Queue message
+  description: Queue a timed message without overriding a protected display. Retry until expiry. The queue is cleared on reload or restart.
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: esptimecast
+    message:
+      required: true
+      selector:
+        text: {}
+    seconds:
+      default: 10
+      description: Display duration in seconds.
+      selector:
+        number:
+          min: 1
+          max: 300
+          mode: box
+    ttl:
+      default: 120
+      description: Maximum seconds to wait before starting this message.
+      selector:
+        number:
+          min: 1
+          max: 3600
+          mode: box
+    speed:
+      default: 80
+      selector:
+        number:
+          min: 10
+          max: 200
+          mode: box
+clear_message_queue:
+  name: Clear message queue
+  description: Cancel waiting messages. A message already on screen ends after its configured duration.
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: esptimecast

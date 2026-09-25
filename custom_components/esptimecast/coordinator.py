@@ -11,6 +11,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .api import Client, ESPTimeCastError
 from .const import DEFAULT_INTERVAL, DOMAIN
+from .message_queue import MessageQueue
 
 
 class Coordinator(DataUpdateCoordinator):
@@ -27,6 +28,8 @@ class Coordinator(DataUpdateCoordinator):
         self.transaction = asyncio.Lock()
         self._saved = {}
         self._last_config = 0
+        self.timer_minutes = 10
+        self.messages = MessageQueue(self)
 
     async def _async_update_data(self):
         async with self.transaction:
@@ -72,3 +75,15 @@ class Coordinator(DataUpdateCoordinator):
             await client.action(name, value)
 
         await self.execute(send, refresh=name != "restart")
+
+    async def set_alarm_fields(self, index, **fields):
+        async def send(client):
+            await client.request(
+                "/save_alarm", {f"alarm{index}_{key}": value for key, value in fields.items()}
+            )
+
+        await self.execute(send)
+
+    async def async_shutdown(self):
+        await self.messages.clear()
+        await super().async_shutdown()

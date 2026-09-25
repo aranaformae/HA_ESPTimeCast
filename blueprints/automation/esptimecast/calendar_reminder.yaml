@@ -1,0 +1,44 @@
+blueprint:
+  name: ESPTimeCast - Agenda-afspraak
+  description: Toon de titel van een afspraak vóór de start. Gebruik een negatieve tijdverschuiving, bijvoorbeeld -00:15:00. Titels worden begrensd op 120 tekens.
+  domain: automation
+  homeassistant:
+    min_version: 2026.9.0
+  input:
+    device:
+      name: ESPTimeCast
+      selector:
+        device:
+          integration: esptimecast
+    calendar:
+      name: Agenda
+      selector:
+        entity:
+          filter:
+            domain: calendar
+    offset:
+      name: Tijdverschuiving (HH:MM:SS, negatief voor vooraf)
+      default: '-00:15:00'
+      selector:
+        text: {}
+    prefix:
+      name: Voorvoegsel
+      default: 'Binnenkort: '
+      selector:
+        text: {}
+variables:
+  message_prefix: !input prefix
+triggers:
+  - trigger: calendar
+    entity_id: !input calendar
+    event: start
+    offset: !input offset
+actions:
+  - action: esptimecast.queue_message
+    data:
+      device_id: !input device
+      message: '{{ (message_prefix ~ trigger.calendar_event.summary)[:120] }}'
+      seconds: 20
+      ttl: 120
+mode: queued
+max: 10
